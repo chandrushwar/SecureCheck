@@ -5,7 +5,6 @@ import mysql.connector
 st.title("Traffic Police Dashboard")
 
 # --- DATABASE CONNECTION ---
-# We use a try-except block here to catch connection errors cleanly
 try:
     mydb = mysql.connector.connect(
         host="localhost",
@@ -16,7 +15,7 @@ try:
     cursor = mydb.cursor()
 except Exception as e:
     st.error(f"Database Connection Failed: {e}")
-    st.stop() # Stop the app if DB fails
+    st.stop()
 
 # --- SIDEBAR ---
 st.sidebar.title("Menu")
@@ -27,7 +26,7 @@ if menu == "View Logs":
     st.header("Recent Traffic Stops")
     
     try:
-        # Select ONLY specific columns to keep it readable
+
         cursor.execute("""
             SELECT stop_date, stop_time, vehicle_number, 
                    driver_gender, violation, stop_outcome 
@@ -37,17 +36,11 @@ if menu == "View Logs":
         data = cursor.fetchall()
         
         if data:
-            # Convert raw data to a list of dictionaries or just use st.table directly
-            # Since st.table handles lists of lists well:
             
-            # Create a header row
             headers = ["Date", "Time", "Vehicle", "Gender", "Violation", "Outcome"]
             
-    
-            # We convert data to a list so we can insert headers
             table_data = [headers] + [list(row) for row in data]
             
-            # avoids 0 days
             for i in range(1, len(table_data)):
                 table_data[i][1] = str(table_data[i][1])
 
@@ -71,11 +64,11 @@ elif menu == "Search Vehicle":
         
         if results:
             st.success("Vehicle Found!")
-            # Get headers
+           
             headers = [i[0] for i in cursor.description]
             
-            # Print simple list of results
-            for row in results:
+         
+                for row in results:
                 st.write("---")
                 for i, val in enumerate(row):
                     st.write(f"**{headers[i]}:** {val}")
@@ -117,7 +110,7 @@ elif menu == "SQL Reports":
         elif "8." in choice:
             sql = "SELECT violation, SUM(is_arrested) FROM traffic_stops GROUP BY violation ORDER BY SUM(is_arrested) DESC LIMIT 5"
             
-        # Run Query
+        
         try:
             cursor.execute(sql)
             res = cursor.fetchall()
@@ -144,3 +137,4 @@ elif menu == "High Risk Alerts":
 # Close DB
 cursor.close()
 mydb.close()
+
