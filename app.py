@@ -68,7 +68,7 @@ elif menu == "Search Vehicle":
             headers = [i[0] for i in cursor.description]
             
          
-                for row in results:
+            for row in results:
                 st.write("---")
                 for i, val in enumerate(row):
                     st.write(f"**{headers[i]}:** {val}")
@@ -137,4 +137,3 @@ elif menu == "High Risk Alerts":
 # Close DB
 cursor.close()
 mydb.close()
-
