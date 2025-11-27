@@ -7,7 +7,7 @@ def clean_date(date_str):
     try:
         return datetime.strptime(date_str, "%m/%d/%Y").strftime("%Y-%m-%d")
     except ValueError:
-        return None  # Return None if date format is invalid
+        return None 
 
 def clean_bool(val):
     """Converts TRUE/FALSE text to 1/0 integers"""
@@ -25,7 +25,7 @@ def clean_int(val):
 input_file = 'traffic_stops.csv'
 output_file = 'traffic_stops_cleaned.csv'
 
-# Define which columns are numeric or boolean for special handling
+
 bool_cols = ['search_conducted', 'is_arrested', 'drugs_related_stop']
 int_cols = ['driver_age', 'driver_age_raw']
 date_col = 'stop_date'
@@ -44,18 +44,17 @@ with open(input_file, mode='r', encoding='utf-8-sig', newline='') as infile, \
     for row in reader:
         cleaned_row = row.copy()
         
-        # 1. Clean Date
+  
         cleaned_row[date_col] = clean_date(row[date_col])
-        
-        # 2. Clean Integers (Age)
+ 
         for col in int_cols:
             cleaned_row[col] = clean_int(row[col])
 
-        # 3. Clean Booleans
+     
         for col in bool_cols:
             cleaned_row[col] = clean_bool(row[col])
 
-        # 4. Handle missing strings (fill empty with 'Unknown')
+     
         for col in fieldnames:
             if col not in bool_cols and col not in int_cols and col != date_col:
                 if not row[col] or row[col].strip() == '':
@@ -64,3 +63,4 @@ with open(input_file, mode='r', encoding='utf-8-sig', newline='') as infile, \
         writer.writerow(cleaned_row)
 
 print(f"Done! Cleaned data saved to '{output_file}'")
+
